@@ -4,12 +4,10 @@ import e.commerce.ecommerce.business.abstracts.ProductService;
 import e.commerce.ecommerce.business.dto.requests.creates.CreateProductRequest;
 import e.commerce.ecommerce.business.dto.requests.updates.UpdateProductRequest;
 import e.commerce.ecommerce.business.dto.responses.creates.CreateProductResponse;
-import e.commerce.ecommerce.business.dto.responses.gets.GetAllProductsResponse;
-import e.commerce.ecommerce.business.dto.responses.gets.GetProductResponse;
+import e.commerce.ecommerce.business.dto.responses.gets.product.GetAllProductsResponse;
+import e.commerce.ecommerce.business.dto.responses.gets.product.GetProductResponse;
 import e.commerce.ecommerce.business.dto.responses.updates.UpdateProductResponse;
-import e.commerce.ecommerce.entities.Product;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +20,8 @@ public class ProductsController {
     private final ProductService service;
 
     @GetMapping
-    public List<GetAllProductsResponse> getAll()
-    { return service.getAll(); }
+    public List<GetAllProductsResponse> getAll(@RequestParam (defaultValue = "true") boolean includeState)
+    { return service.getAll(includeState); }
 
     @GetMapping("/{id}")
     public GetProductResponse getById(@PathVariable int id)
@@ -37,6 +35,10 @@ public class ProductsController {
     @PutMapping ("/{id}")
     public UpdateProductResponse update(@PathVariable int id, @RequestBody UpdateProductRequest request)
     { return service.update(id, request); }
+
+    @PutMapping("/state")
+    public GetProductResponse stateChange (@RequestParam int id)
+    { return service.productStateChange(id); }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

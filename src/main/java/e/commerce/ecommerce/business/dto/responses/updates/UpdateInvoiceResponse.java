@@ -1,20 +1,22 @@
 package e.commerce.ecommerce.business.dto.responses.updates;
 
-import e.commerce.ecommerce.entities.enums.State;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateProductResponse {
+public class UpdateInvoiceResponse {
     private int id;
-    private String name;
-    private State state;
+    private String productName;
     private int quantity;
     private double price;
     private String description;
+    private double totalPrice;
+    private LocalDateTime saleTime;
 }

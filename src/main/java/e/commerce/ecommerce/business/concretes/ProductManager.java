@@ -1,14 +1,16 @@
 package e.commerce.ecommerce.business.concretes;
 
+import e.commerce.ecommerce.business.rules.ProductBusinessRules;
+import e.commerce.ecommerce.entities.enums.State;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import e.commerce.ecommerce.entities.Product;
 import e.commerce.ecommerce.business.abstracts.ProductService;
-import e.commerce.ecommerce.business.dto.responses.gets.GetProductResponse;
+import e.commerce.ecommerce.business.dto.responses.gets.product.GetProductResponse;
 import e.commerce.ecommerce.business.dto.requests.creates.CreateProductRequest;
 import e.commerce.ecommerce.business.dto.requests.updates.UpdateProductRequest;
-import e.commerce.ecommerce.business.dto.responses.gets.GetAllProductsResponse;
+import e.commerce.ecommerce.business.dto.responses.gets.product.GetAllProductsResponse;
 import e.commerce.ecommerce.business.dto.responses.updates.UpdateProductResponse;
 import e.commerce.ecommerce.business.dto.responses.creates.CreateProductResponse;
 
@@ -22,10 +24,11 @@ import java.util.List;
 public class ProductManager implements ProductService {
     private final ModelMapper mapper;
     private final ProductRepository repository;
+    private final ProductBusinessRules rules;
 
     @Override
-    public List<GetAllProductsResponse> getAll() {
-        List<Product> products = repository.findAll();
+    public List<GetAllProductsResponse> getAll(boolean includeState) {
+        List<Product> products = filterProductByState(includeState);
 
         List<GetAllProductsResponse> response = products
                 .stream()
@@ -37,7 +40,8 @@ public class ProductManager implements ProductService {
 
     @Override
     public GetProductResponse getById(int id) {
-        checkIfProductExists(id);
+        rules.checkIfProductExists(id);
+
         Product product = repository.findById(id).orElseThrow();
 
         GetProductResponse response = mapper.map(product, GetProductResponse.class);
@@ -47,11 +51,14 @@ public class ProductManager implements ProductService {
 
     @Override
     public CreateProductResponse add(CreateProductRequest request) {
-        checkIfPriceValue(request.getPrice());
-        checkIfQuantityValue(request.getQuantity());
-        checkIfDescriptionValue(request.getDescription());
+        rules.checkIfPriceValue(request.getPrice());
+        rules.checkIfQuantityValue(request.getQuantity());
+        rules.checkIfDescriptionValue(request.getDescription());
+
         Product product = mapper.map(request, Product.class);
+
         product.setId(0);
+        product.setState(State.ACTIVE);
         repository.save(product);
 
         CreateProductResponse response = mapper.map(product, CreateProductResponse.class);
@@ -61,11 +68,13 @@ public class ProductManager implements ProductService {
 
     @Override
     public UpdateProductResponse update(int id, UpdateProductRequest request) {
-        checkIfProductExists(id);
-        checkIfPriceValue(request.getPrice());
-        checkIfQuantityValue(request.getQuantity());
-        checkIfDescriptionValue(request.getDescription());
+        rules.checkIfProductExists(id);
+        rules.checkIfPriceValue(request.getPrice());
+        rules.checkIfQuantityValue(request.getQuantity());
+        rules.checkIfDescriptionValue(request.getDescription());
+
         Product product = mapper.map(request, Product.class);
+
         product.setId(id);
         repository.save(product);
 
@@ -76,22 +85,38 @@ public class ProductManager implements ProductService {
 
     @Override
     public void delete(int id) {
-        checkIfProductExists(id);
+        rules.checkIfProductExists(id);
+
         repository.deleteById(id);
     }
 
-    // Business Rules
+    @Override
+    public GetProductResponse productStateChange(int id) {
+        rules.checkIfProductExists(id);
 
-    private void checkIfProductExists(int id)
-    { if (!repository.existsById(id)) throw new RuntimeException("Product is not exist!"); }
+        Product product = repository.findById(id).orElseThrow();
 
-    private void checkIfPriceValue(double price)
-    { if (price <= 0) throw new RuntimeException("Product price must be greater than 0."); }
+        product.setId(id);
+        stateChange(id, product.getState());
+        repository.save(product);
 
-    private void checkIfQuantityValue(int quantity)
-    { if (quantity < 0 ) throw new RuntimeException("The quantity of products cannot be less than 0."); }
+        GetProductResponse response = mapper.map(product, GetProductResponse.class);
 
-    private void checkIfDescriptionValue (String description)
-    { if ((description.length() < 10) || (description.length() >50 ))
-        throw new RuntimeException("The description must contain at least 10 characters and at most 50 characters."); }
+        return response;
+    }
+
+    private void stateChange(int id, State state){
+        Product product = repository.findById(id).orElseThrow();
+
+        if (state.equals(State.ACTIVE) )
+        {  product.setState(State.PASSIVE); }
+        else
+        { product.setState(State.ACTIVE); }
+    }
+
+    private List<Product> filterProductByState (boolean includeState){
+        if (includeState){ return repository.findAll(); }
+
+        return repository.findAllByStateIsNot(State.PASSIVE);
+    }
 }
