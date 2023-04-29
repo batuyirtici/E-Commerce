@@ -21,9 +21,8 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
     public ExceptionResult<Object>handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         Map<String, String> validationErrors = new HashMap<>();
-        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
-            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors())
+        { validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage()); }
 
         return new ExceptionResult<>(ExceptionTypes.Exception.Validation, validationErrors);
     }

@@ -1,5 +1,9 @@
 package e.commerce.ecommerce.common.constants;
 
+import lombok.Getter;
+import lombok.Setter;
+
+
 public class ExceptionTypes {
 
     public static class Exception {

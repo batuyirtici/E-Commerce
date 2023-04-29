@@ -1,7 +1,12 @@
 package e.commerce.ecommerce.core.utils.results;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class ExceptionResult<T>{
     private LocalDateTime timestamp;
     private String type;

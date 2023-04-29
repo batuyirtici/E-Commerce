@@ -1,6 +1,7 @@
 package e.commerce.ecommerce.business.concretes;
 
 import e.commerce.ecommerce.business.abstracts.PaymentService;
+import e.commerce.ecommerce.business.abstracts.ProductService;
 import e.commerce.ecommerce.business.abstracts.SaleService;
 import e.commerce.ecommerce.business.dto.requests.creates.CreateSaleRequest;
 import e.commerce.ecommerce.business.dto.requests.updates.UpdateSaleRequest;
@@ -28,6 +29,7 @@ public class SaleManager implements SaleService {
     private final PaymentService paymentService;
     private final SaleRepository saleRepository;
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
 
     @Override
@@ -55,7 +57,8 @@ public class SaleManager implements SaleService {
 
     @Override
     public CreateSaleResponse add(CreateSaleRequest request) {
-        Product product = productRepository.findById(request.getProductId()).orElseThrow();
+//        Product product = productRepository.findById(request.getProductId()).orElseThrow();
+        Product product = mapper.map(productService.getById(request.getProductId()), Product.class);
         rules.checkIfState(product.getState());
         rules.checkIfQuantity(product.getQuantity());
 
