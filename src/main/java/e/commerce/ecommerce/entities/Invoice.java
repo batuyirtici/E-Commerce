@@ -19,14 +19,11 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
+    private String productName;
+    private String productDescription;
     private int quantity;
     private double price;
-    private String description;
     private double totalPrice;
     private LocalDateTime saleTime;
-
-    @ManyToOne
-    private Product product; // productId
 
 }

@@ -15,13 +15,6 @@ public class Messages {
         public static final String NotExists         = "INVOICE_NOT_EXISTS";
     }
 
-    public static class Order{
-        public static final String Exists            = "ORDER_ALREADY_EXISTS";
-        public static final String NotExists         = "ORDER_NOT_EXISTS";
-        public static final String NameLength        = "ORDER_NAME_CANNOT_BE_LEFT_BLANK";
-        public static final String DescriptionLength = "ORDER_DESCRIPTION_CANNOT_BE_LEFT_BLANK";
-    }
-
     public static class Payment{
         public static final String Exists            = "PAYMENT_ALREADY_EXISTS";
         public static final String NotExists         = "PAYMENT_NOT_EXISTS";

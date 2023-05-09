@@ -1,4 +1,4 @@
-package e.commerce.ecommerce.business.dto.responses.creates;
+package e.commerce.ecommerce.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,13 +11,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateInvoiceResponse {
-    private int id;
+public class CreateSaleInvoiceRequest {
     private int saleId;
     private String productName;
     private String productDescription;
-    private int quantity;
     private double price;
-    private double totalPrice;
+    private int quantity;
     private LocalDateTime saleTime;
 }

@@ -1,6 +1,7 @@
 package e.commerce.ecommerce.entities;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,5 @@ public class Sale {
 
     @ManyToOne
     private Product product;
+
 }

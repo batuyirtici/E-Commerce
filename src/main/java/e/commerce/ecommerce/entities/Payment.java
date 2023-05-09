@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.lang.annotation.Target;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,9 +21,9 @@ public class Payment {
     private int id;
 
     private String cardCvv;
-    private double balance;
     private String cardNumber;
     private String cardHolder;
     private int cardExpirationYear;
     private int cardExpirationMonth;
+    private double balance;
 }

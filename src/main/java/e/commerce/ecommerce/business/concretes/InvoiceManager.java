@@ -1,16 +1,20 @@
 package e.commerce.ecommerce.business.concretes;
 
 import e.commerce.ecommerce.business.abstracts.InvoiceService;
+import e.commerce.ecommerce.business.abstracts.SaleService;
 import e.commerce.ecommerce.business.dto.requests.creates.CreateInvoiceRequest;
 import e.commerce.ecommerce.business.dto.requests.updates.UpdateInvoiceRequest;
 import e.commerce.ecommerce.business.dto.responses.creates.CreateInvoiceResponse;
 import e.commerce.ecommerce.business.dto.responses.gets.invoice.GetAllInvoicesResponse;
 import e.commerce.ecommerce.business.dto.responses.gets.invoice.GetInvoiceResponse;
+import e.commerce.ecommerce.business.dto.responses.gets.sale.GetSaleResponse;
 import e.commerce.ecommerce.business.dto.responses.updates.UpdateInvoiceResponse;
 import e.commerce.ecommerce.business.rules.InvoiceBusinessRules;
+import e.commerce.ecommerce.common.dto.CreateSaleInvoiceRequest;
 import e.commerce.ecommerce.entities.Invoice;
+import e.commerce.ecommerce.entities.Sale;
 import e.commerce.ecommerce.repository.InvoiceRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import e.commerce.ecommerce.repository.SaleRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,7 +27,6 @@ public class InvoiceManager implements InvoiceService {
     private final ModelMapper mapper;
     private final InvoiceBusinessRules rules;
     private final InvoiceRepository repository;
-    private final ProductManager productManager;
 
     @Override
     public List<GetAllInvoicesResponse> getAll() {
@@ -52,14 +55,12 @@ public class InvoiceManager implements InvoiceService {
     public CreateInvoiceResponse add(CreateInvoiceRequest request) {
         Invoice invoice = mapper.map(request, Invoice.class);
 
-
         invoice.setId(0);
-        invoice.setPrice(productManager.getById(request.getProductId()).getPrice());
-        invoice.setTotalPrice(invoice.getQuantity() * invoice.getPrice());
 
         repository.save(invoice);
 
         CreateInvoiceResponse response = mapper.map(invoice, CreateInvoiceResponse.class);
+        response.setTotalPrice(request.getPrice() * request.getQuantity());
 
         return response;
     }
@@ -71,9 +72,6 @@ public class InvoiceManager implements InvoiceService {
         Invoice invoice = mapper.map(request, Invoice.class);
 
         invoice.setId(id);
-        invoice.setPrice(productManager.getById(request.getProductId()).getPrice());
-        invoice.setTotalPrice(invoice.getQuantity() * invoice.getPrice());
-
         repository.save(invoice);
 
         UpdateInvoiceResponse response = mapper.map(invoice, UpdateInvoiceResponse.class);

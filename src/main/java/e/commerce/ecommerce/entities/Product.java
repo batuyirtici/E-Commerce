@@ -31,12 +31,8 @@ public class Product {
     @ManyToOne
     private Category category; // category_id
 
-    @ManyToMany
-    private List<Order> orders;
 
     @OneToMany(mappedBy = "product")
     private List<Sale> sales;
 
-    @OneToMany(mappedBy = "product")
-    private List<Invoice> invoices;
 }

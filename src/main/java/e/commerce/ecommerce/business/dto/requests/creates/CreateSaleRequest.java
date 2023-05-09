@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CreateSaleRequest {
     private int productId;
+    private int price;
     private int quantity;
     private LocalDateTime saleTime;
 

@@ -13,10 +13,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UpdateInvoiceResponse {
     private int id;
+    private int saleId;
     private String productName;
+    private String productDescription;
     private int quantity;
     private double price;
-    private String description;
     private double totalPrice;
     private LocalDateTime saleTime;
 }

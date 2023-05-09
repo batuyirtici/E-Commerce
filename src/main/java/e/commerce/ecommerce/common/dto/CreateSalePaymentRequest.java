@@ -10,4 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateSalePaymentRequest extends PaymentRequest {private int productId;}
+public class CreateSalePaymentRequest extends PaymentRequest {
+    private double price;
+    private int productId;
+}

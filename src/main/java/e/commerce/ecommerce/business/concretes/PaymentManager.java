@@ -2,7 +2,7 @@ package e.commerce.ecommerce.business.concretes;
 
 import e.commerce.ecommerce.business.abstracts.PaymentService;
 import e.commerce.ecommerce.business.abstracts.PosService;
-import e.commerce.ecommerce.business.abstracts.SaleService;
+import e.commerce.ecommerce.business.abstracts.ProductService;
 import e.commerce.ecommerce.business.dto.requests.creates.CreatePaymentRequest;
 import e.commerce.ecommerce.business.dto.requests.updates.UpdatePaymentRequest;
 import e.commerce.ecommerce.business.dto.responses.creates.CreatePaymentResponse;
@@ -13,11 +13,7 @@ import e.commerce.ecommerce.business.dto.responses.updates.UpdatePaymentResponse
 import e.commerce.ecommerce.business.rules.PaymentBusinessRules;
 import e.commerce.ecommerce.common.dto.CreateSalePaymentRequest;
 import e.commerce.ecommerce.entities.Payment;
-import e.commerce.ecommerce.entities.Product;
-import e.commerce.ecommerce.entities.Sale;
 import e.commerce.ecommerce.repository.PaymentRepository;
-import e.commerce.ecommerce.repository.ProductRepository;
-import e.commerce.ecommerce.repository.SaleRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -30,7 +26,7 @@ public class PaymentManager implements PaymentService {
     private final ModelMapper mapper;
     private final PosService posService;
     private final PaymentBusinessRules rules;
-    private final ProductManager productManager;
+    private final ProductService productService;
     private final PaymentRepository paymentRepository;
 
     @Override
@@ -86,12 +82,12 @@ public class PaymentManager implements PaymentService {
     public void processSalePayment(CreateSalePaymentRequest request) {
         rules.checkIfPaymentIsValid(request);
         Payment payment = paymentRepository.findByCardNumber(request.getCardNumber());
-        GetProductResponse product = productManager.getById(request.getProductId());
+        GetProductResponse product = productService.getById(request.getProductId());
 
         rules.checkIfBalanceEnough(payment.getBalance(), product.getPrice());
         posService.pay();
 
-        payment.setBalance(payment.getBalance() - product.getPrice());
+        payment.setBalance(payment.getBalance() - request.getPrice());
         paymentRepository.save(payment);
     }
 

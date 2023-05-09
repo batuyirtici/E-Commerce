@@ -6,6 +6,7 @@ import e.commerce.ecommerce.business.dto.responses.creates.CreateInvoiceResponse
 import e.commerce.ecommerce.business.dto.responses.gets.invoice.GetAllInvoicesResponse;
 import e.commerce.ecommerce.business.dto.responses.gets.invoice.GetInvoiceResponse;
 import e.commerce.ecommerce.business.dto.responses.updates.UpdateInvoiceResponse;
+import e.commerce.ecommerce.common.dto.CreateSaleInvoiceRequest;
 
 import java.util.List;
 

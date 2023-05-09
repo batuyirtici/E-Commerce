@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateInvoiceRequest {
-    private int productId;
+    private int saleId;
     private String productName;
+    private String productDescription;
+    private double price;
     private int quantity;
-    private String description;
     private LocalDateTime saleTime;
 }
